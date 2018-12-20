@@ -76,6 +76,14 @@ export default {
         }],
         search: ''
 		}
+	},
+	created () {
+		this.$http.get('http://localhost:8080/easy-develop/apiDev/apis').then((data) => {
+			console.log(data)
+		},
+		(res) => {
+		  console.error(res)
+		})
 	}
 }
 </script>
