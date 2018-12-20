@@ -1,19 +1,19 @@
 <template>
 	<div>
 		<el-table
-    :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+    :data="tableData.filter(data => !search || data.apiName.toLowerCase().includes(search.toLowerCase()))"
     style="width: 100%">
     <el-table-column
       label="Date"
-      prop="date">
+      prop="gmtCreate">
     </el-table-column>
     <el-table-column
       label="Return"
-      prop="return">
+      prop="returnType">
     </el-table-column>
     <el-table-column
       label="Name"
-      prop="name">
+      prop="apiName">
     </el-table-column>
     <el-table-column
       label="Params"
@@ -21,7 +21,7 @@
     </el-table-column>
     <el-table-column
       label="Description"
-      prop="desc">
+      prop="description">
     </el-table-column>
     <el-table-column
       align="right">
@@ -49,41 +49,27 @@
 export default {
 	data () {
 		return {
-			tableData: [{
-          date: '2018-12-07',
-          return: 'Array',
-          name: 'apiList.getBreadList',
-          params: 'Array:array',
-          desc: '移除数组中的空白元素'
-        }, {
-          date: '2018-12-07',
-          return: '-_-',
-          name: 'getBreadList',
-          params: '-_-',
-          desc: '获得路由变化，生成面包屑导航数据'
-        }, {
-          date: '2018-12-07',
-          return: '-_-',
-          name: 'Array.splice',
-          params: 'int: index, int: step',
-          desc: '删除数组中指定位置后指定数量的元素'
-        }, {
-          date: '2018-12-07',
-          return: 'Array[]',
-          name: 'String.split',
-          params: 'char:symbol',
-          desc: '根据指定标识分割字符串得到分割后的数组'
-        }],
+			tableData: [],
         search: ''
 		}
 	},
 	created () {
 		this.$http.get('http://localhost:8080/easy-develop/apiDev/apis').then((data) => {
-			console.log(data)
+		  let res = data.body
+			if (res.ret_code === '200' && res.ret_msg === 'SUCCESS') {
+				this.tableData = res.ret_data
+				console.log('tableData:' + this.tableData)
+			}
 		},
 		(res) => {
 		  console.error(res)
 		})
+	},
+	methods: {
+		handleEdit (index, row) {
+			var id = row.id
+			this.$router.push({ path: `/api/apiUpdate/${id}` })
+		}
 	}
 }
 </script>
